@@ -1,65 +1,51 @@
+<p align="center"><img src="https://raw.githubusercontent.com/samkrull/samkrull/output/profile-header.svg" alt="Samuel Krull — programação, automação e inteligência artificial" width="100%"></p>
 
-<h1 align="center">Olá, eu sou Samuel 👋</h1>
-
-<p align="center">
-  Estudante  • Python • IA • Automação • Hackathons
-</p>
+<p align="center">Estudante · Python · IA · Automação · Hackathons</p>
 
 ---
 
-## 🚀 Sobre mim
+## Sobre mim
 
-Sou estudante técnico e tenho interesse em tecnologia, programação, automação e inteligência artificial.
+Sou estudante técnico e tenho interesse em programação, automação e inteligência artificial aplicada.
 
-Atualmente venho desenvolvendo projetos com apoio de IA, principalmente em:
-- Python
-- automações
-- soluções para problemas reais
-- projetos práticos e hackathons
+Estou desenvolvendo minha prática com Python e JavaScript, participando de projetos e hackathons.
 
----
-
-## 🛠️ Tecnologias e interesses
+## Tecnologias e interesses
 
 <p>
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/IA-7B42F6?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Automação-0A66C2?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&amp;logo=python&amp;logoColor=white" alt="PYTHON" height="28">
+  <img src="https://img.shields.io/badge/IA-7B42F6?style=for-the-badge" alt="IA" height="28">
+  <img src="https://img.shields.io/badge/Automa%C3%A7%C3%A3o-0A66C2?style=for-the-badge" alt="AUTOMAÇÃO" height="28">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="GITHUB" height="28">
 </p>
 
----
-
-## 📌 Projetos em destaque
-
-- **Bean Passport** — rastreabilidade de produção com hash, QR Code e validação pública
-- **Automações em Python**
-- **Projetos com IA**
-- **Projetos práticos e hackathons**
-
----
-
-## 📊 GitHub Stats
+## Meu GitHub
 
 <p align="center">
-  <img height="170" src="https://github-readme-stats.vercel.app/api?username=samkrull&show_icons=true&theme=tokyonight" />
-  <img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=samkrull&layout=compact&theme=tokyonight" />
+  <img src="https://raw.githubusercontent.com/samkrull/samkrull/output/github-panel.svg" alt="Painel com minhas estatísticas e as linguagens dos meus projetos pessoais públicos no GitHub" width="100%">
 </p>
 
----
+## Contribuições
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/samkrull/samkrull/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/samkrull/samkrull/output/github-contribution-grid-snake.svg">
+  <img alt="Animação de uma cobrinha percorrendo minhas contribuições no GitHub" src="https://raw.githubusercontent.com/samkrull/samkrull/output/github-contribution-grid-snake.svg" width="100%">
+</picture>
 
-<!--
-**samkrull/samkrull** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+## Projeto atual
 
-Here are some ideas to get you started:
+### [Bean Passport](https://github.com/Acorde-Chocolates/bean-passport)
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+Contribuição em equipe em um projeto de rastreabilidade da produção de chocolate.
+
+Minha parte: automação, preparação e validação de dados com **Google Apps Script**.
+
+[Repositório](https://github.com/Acorde-Chocolates/bean-passport) · [Página pública](https://acorde-chocolates.github.io/bean-passport/lote/?id=ACD-0142) · [Contribuição](https://github.com/Acorde-Chocolates/bean-passport/pull/2)
+
+## Contato
+
+<p>
+  <a href="https://www.linkedin.com/in/samuel-krull-46873139a"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge" alt="Meu LinkedIn" height="28"></a>
+  <a href="mailto:sam.krullcarvalh@gmail.com"><img src="https://img.shields.io/badge/E--mail-30363D?style=for-the-badge&amp;logo=gmail&amp;logoColor=white" alt="Enviar e-mail para Samuel" height="28"></a>
+</p>
