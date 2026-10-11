@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="990" height="224" viewBox="0 0 990 224" role="img" aria-labelledby="panel-title"><title id="panel-title">Estatísticas e linguagens públicas de Samuel Krull</title><defs><clipPath id="panel-clip"><rect x="0.5" y="0.5" width="989.0" height="223.0" rx="10" /></clipPath></defs><rect x="0.5" y="0.5" width="989.0" height="223.0" rx="10" fill="#0D1117" /><g clip-path="url(#panel-clip)"><svg width="495" height="195" viewBox="0 0 495 195" fill="none" role="img" aria-labelledby="stats_descId" id="stats_root" x="0" y="0">
         <title id="stats_titleId">GitHub em números, Rank: C</title>
-        <desc id="stats_descId">Total de estrelas: 0, Total de Commits  (Ano passado) : 4, Total de PRs: 2, Total de Issues: 0, Contribuiu para (ano passado): 1</desc>
+        <desc id="stats_descId">Total de estrelas: 0, Total de Commits  (Ano passado) : 5, Total de PRs: 2, Total de Issues: 0, Contribuiu para (ano passado): 1</desc>
         <style>
           .stats_header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -54,8 +54,8 @@
       stroke-width: 6;
       stroke-linecap: round;
       opacity: 0.8;
-      transform-origin: -10px 8px;
-      transform: rotate(-90deg);
+      
+      
       animation: stats_rankAnimation 1s forwards ease-in-out;
     }
     
@@ -64,7 +64,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 249.1472867864384;
+        stroke-dashoffset: 249.03258883510549;
       }
     }
   
@@ -115,7 +115,17 @@
 
         <g data-testid="main-card-body" transform="translate(0, 55)">
           
-    
+    <g data-testid="rank-circle" transform="translate(418.5, 47.5)">
+        <circle class="stats_rank-circle-rim" cx="-10" cy="8" r="40" />
+        <circle class="stats_rank-circle" cx="-10" cy="8" r="40" stroke-dashoffset="249.03258883510549" transform="rotate(-90 -10 8)" />
+        <g class="stats_rank-text" transform="translate(-5 5)">
+          
+        <text x="-5" y="3" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="level-rank-icon">
+          C
+        </text>
+      
+        </g>
+      </g>
     <svg x="0" y="0">
       <g transform="translate(0, 0)">
     <g class="stats_stagger" style="animation-delay: 450ms" transform="translate(25, 0)">
@@ -135,7 +145,7 @@
     </svg>
   
       <text class="stats_stat stats_bold" x="25" y="12.5">Total de Commits (Ano passado):</text>
-      <text class="stats_stat stats_bold" x="274.01" y="12.5" data-testid="commits">4</text>
+      <text class="stats_stat stats_bold" x="274.01" y="12.5" data-testid="commits">5</text>
     </g>
   </g><g transform="translate(0, 50)">
     <g class="stats_stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
