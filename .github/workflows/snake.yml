@@ -1,0 +1,52 @@
+name: Profile snake
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '18 3 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/snake.yml
+      - README.md
+
+concurrency:
+  group: profile-snake
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  generate:
+    if: github.repository == 'samkrull/samkrull'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Create light and dark contribution animations
+        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3
+        with:
+          github_user_name: samkrull
+          github_token: ${{ github.token }}
+          outputs: |
+            dist/github-contribution-grid-snake.svg?color_snake=%232563EB&color_dots=%23ebedf0,%23bfdbfe,%2360a5fa,%232563eb,%231e40af
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark&color_snake=%2379C0FF&color_dots=%23161b22,%230c2d6b,%231f6feb,%2358a6ff,%2379c0ff
+
+      - name: Confirm both animations were created
+        run: |
+          test -s dist/github-contribution-grid-snake.svg
+          test -s dist/github-contribution-grid-snake-dark.svg
+
+      - name: Save animations on the output branch
+        uses: crazy-max/ghaction-github-pages@1d6ee9b181a81033a16bd707a1401afa978daab4 # v5
+        with:
+          target_branch: output
+          build_dir: dist
+          keep_history: true
+          allow_empty_commit: false
+          jekyll: false
+          commit_message: 'chore(profile): refresh contribution animation'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
