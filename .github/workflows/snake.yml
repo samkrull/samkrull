@@ -58,7 +58,7 @@ jobs:
                   "icon_color": "79C0FF", "hide_border": "true", "border_radius": "0",
                   "disable_animations": "true", "card_width": "495",
               }
-              stats = dict(common, show_icons="true", hide_rank="true", custom_title="GitHub em números")
+              stats = dict(common, show_icons="true", hide_rank="false", custom_title="GitHub em números")
               languages = dict(common, layout="compact", langs_count="6", exclude_repo="samkrull")
               base = "https://github-stats-extended.vercel.app"
               return [base + "/api?" + urllib.parse.urlencode(stats),
@@ -74,6 +74,32 @@ jobs:
               if len(source) > 1_000_000:
                   raise ValueError("The statistics SVG is larger than expected.")
               return source
+          
+          
+          def freeze_rank(root):
+              circles = [element for element in root.iter() if "rank-circle" in element.get("class", "").split()]
+              if not circles:
+                  return
+              styles = [element for element in root.iter() if element.tag == tag("style")]
+              css = "\n".join(element.text or "" for element in styles)
+              final_circle = re.search(r"@keyframes\s+rankAnimation\s*\{\s*from\s*\{[^}]*\}\s*to\s*\{([^}]+)\}", css)
+              offset = re.search(r"stroke-dashoffset:\s*([0-9]+(?:\.[0-9]+)?)\s*;", final_circle[1]) if final_circle else None
+              final_text = re.search(r"@keyframes\s+scaleInAnimation\s*\{\s*from\s*\{[^}]*\}\s*to\s*\{([^}]+)\}", css)
+              translation = re.search(r"translate\(\s*(-?[0-9]+(?:\.[0-9]+)?)px\s*,\s*(-?[0-9]+(?:\.[0-9]+)?)px\s*\)\s*scale\(1\)", final_text[1]) if final_text else None
+              if not (offset and translation):
+                  raise ValueError("Unexpected rank animation format.")
+              for circle in circles:
+                  circle.set("stroke-dashoffset", offset[1])
+                  circle.set("transform", "rotate(-90 " + circle.get("cx", "0") + " " + circle.get("cy", "0") + ")")
+              for element in root.iter():
+                  if "rank-text" in element.get("class", "").split():
+                      element.set("transform", "translate(" + translation[1] + " " + translation[2] + ")")
+              for style in styles:
+                  # Preserve the service's final rank state without relying on animation.
+                  def remove_rotation(match):
+                      declarations = re.sub(r"\btransform(?:-origin)?\s*:[^;]+;", "", match[2])
+                      return match[1] + declarations + match[3]
+                  style.text = re.sub(r"(\.rank-circle\s*\{)([^}]*)(\})", remove_rotation, style.text or "")
           
           
           def prepare_card(source, prefix, kind):
@@ -99,6 +125,7 @@ jobs:
                             if element.tag == tag("text") and "".join(element.itertext()).strip()}
                   if not {"stars", "commits", "prs", "issues", "contribs"}.issubset(actual):
                       raise ValueError("Statistics are unavailable; previous valid image will be retained.")
+                  freeze_rank(root)
               else:
                   has_languages = any("lang-name" in element.get("class", "").split()
                                       and "".join(element.itertext()).strip() for element in root.iter())
