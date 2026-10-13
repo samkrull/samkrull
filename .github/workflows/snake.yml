@@ -602,19 +602,6 @@ jobs:
               font-size="13"
             >Building solutions. Learning by doing.</text>
 
-            <g
-              fill="none"
-              stroke="#58A6FF"
-              stroke-width="5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              opacity="0.9"
-            >
-              <path d="M790 83 L755 110 L790 137"/>
-              <path d="M870 83 L905 110 L870 137"/>
-              <path d="M846 68 L817 151"/>
-            </g>
-
             <circle
               cx="925"
               cy="31"
