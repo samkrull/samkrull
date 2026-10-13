@@ -22,8 +22,10 @@ jobs:
     if: github.repository == 'samkrull/samkrull'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     permissions:
       contents: write
+
     steps:
       - name: Create header and unified statistics panel
         env:
@@ -41,161 +43,496 @@ jobs:
           import urllib.error
           import urllib.request
           import xml.etree.ElementTree as ET
-          
-          
+
+
           NS = "http://www.w3.org/2000/svg"
           ET.register_namespace("", NS)
-          
-          
+
+
           def tag(name):
               return "{" + NS + "}" + name
-          
-          
+
+
           def source_urls():
               common = {
-                  "username": "samkrull", "theme": "github_dark", "locale": "pt-br",
-                  "bg_color": "0D1117", "title_color": "79C0FF", "text_color": "C9D1D9",
-                  "icon_color": "79C0FF", "hide_border": "true", "border_radius": "0",
-                  "disable_animations": "true", "card_width": "495",
+                  "username": "samkrull",
+                  "theme": "github_dark",
+                  "locale": "pt-br",
+                  "bg_color": "0D1117",
+                  "title_color": "79C0FF",
+                  "text_color": "C9D1D9",
+                  "icon_color": "79C0FF",
+                  "hide_border": "true",
+                  "border_radius": "0",
+                  "disable_animations": "true",
+                  "card_width": "495",
               }
-              stats = dict(common, show_icons="true", hide_rank="false", custom_title="GitHub em números")
-              languages = dict(common, layout="compact", langs_count="6", exclude_repo="samkrull")
+
+              stats = dict(
+                  common,
+                  show_icons="true",
+                  hide_rank="false",
+                  custom_title="GitHub em números",
+              )
+
+              languages = dict(
+                  common,
+                  layout="compact",
+                  langs_count="6",
+                  exclude_repo="samkrull",
+              )
+
               base = "https://github-stats-extended.vercel.app"
-              return [base + "/api?" + urllib.parse.urlencode(stats),
-                      base + "/api/top-langs/?" + urllib.parse.urlencode(languages)]
-          
-          
+
+              return [
+                  base + "/api?" + urllib.parse.urlencode(stats),
+                  base + "/api/top-langs/?" + urllib.parse.urlencode(languages),
+              ]
+
+
           def read_source(url):
-              request = urllib.request.Request(url, headers={"User-Agent": "samkrull-profile/1.0"})
+              request = urllib.request.Request(
+                  url,
+                  headers={"User-Agent": "samkrull-profile/1.0"},
+              )
+
               with urllib.request.urlopen(request, timeout=30) as response:
                   if "image/svg+xml" not in response.headers.get("Content-Type", ""):
-                      raise ValueError("The statistics service did not return SVG.")
+                      raise ValueError(
+                          "The statistics service did not return SVG."
+                      )
+
                   source = response.read(1_000_001)
+
               if len(source) > 1_000_000:
-                  raise ValueError("The statistics SVG is larger than expected.")
+                  raise ValueError(
+                      "The statistics SVG is larger than expected."
+                  )
+
               return source
-          
-          
+
+
           def freeze_rank(root):
-              circles = [element for element in root.iter() if "rank-circle" in element.get("class", "").split()]
+              circles = [
+                  element
+                  for element in root.iter()
+                  if "rank-circle" in element.get("class", "").split()
+              ]
+
               if not circles:
                   return
-              styles = [element for element in root.iter() if element.tag == tag("style")]
+
+              styles = [
+                  element
+                  for element in root.iter()
+                  if element.tag == tag("style")
+              ]
+
               css = "\n".join(element.text or "" for element in styles)
-              final_circle = re.search(r"@keyframes\s+rankAnimation\s*\{\s*from\s*\{[^}]*\}\s*to\s*\{([^}]+)\}", css)
-              offset = re.search(r"stroke-dashoffset:\s*([0-9]+(?:\.[0-9]+)?)\s*;", final_circle[1]) if final_circle else None
-              final_text = re.search(r"@keyframes\s+scaleInAnimation\s*\{\s*from\s*\{[^}]*\}\s*to\s*\{([^}]+)\}", css)
-              translation = re.search(r"translate\(\s*(-?[0-9]+(?:\.[0-9]+)?)px\s*,\s*(-?[0-9]+(?:\.[0-9]+)?)px\s*\)\s*scale\(1\)", final_text[1]) if final_text else None
+
+              final_circle = re.search(
+                  r"@keyframes\s+rankAnimation\s*\{\s*from\s*\{[^}]*\}\s*to\s*\{([^}]+)\}",
+                  css,
+              )
+
+              offset = (
+                  re.search(
+                      r"stroke-dashoffset:\s*([0-9]+(?:\.[0-9]+)?)\s*;",
+                      final_circle[1],
+                  )
+                  if final_circle
+                  else None
+              )
+
+              final_text = re.search(
+                  r"@keyframes\s+scaleInAnimation\s*\{\s*from\s*\{[^}]*\}\s*to\s*\{([^}]+)\}",
+                  css,
+              )
+
+              translation = (
+                  re.search(
+                      r"translate\(\s*(-?[0-9]+(?:\.[0-9]+)?)px\s*,\s*(-?[0-9]+(?:\.[0-9]+)?)px\s*\)\s*scale\(1\)",
+                      final_text[1],
+                  )
+                  if final_text
+                  else None
+              )
+
               if not (offset and translation):
-                  raise ValueError("Unexpected rank animation format.")
+                  raise ValueError(
+                      "Unexpected rank animation format."
+                  )
+
               for circle in circles:
                   circle.set("stroke-dashoffset", offset[1])
-                  circle.set("transform", "rotate(-90 " + circle.get("cx", "0") + " " + circle.get("cy", "0") + ")")
+                  circle.set(
+                      "transform",
+                      "rotate(-90 "
+                      + circle.get("cx", "0")
+                      + " "
+                      + circle.get("cy", "0")
+                      + ")",
+                  )
+
               for element in root.iter():
                   if "rank-text" in element.get("class", "").split():
-                      element.set("transform", "translate(" + translation[1] + " " + translation[2] + ")")
+                      element.set(
+                          "transform",
+                          "translate("
+                          + translation[1]
+                          + " "
+                          + translation[2]
+                          + ")",
+                      )
+
               for style in styles:
-                  # Preserve the service's final rank state without relying on animation.
                   def remove_rotation(match):
-                      declarations = re.sub(r"\btransform(?:-origin)?\s*:[^;]+;", "", match[2])
+                      declarations = re.sub(
+                          r"\btransform(?:-origin)?\s*:[^;]+;",
+                          "",
+                          match[2],
+                      )
                       return match[1] + declarations + match[3]
-                  style.text = re.sub(r"(\.rank-circle\s*\{)([^}]*)(\})", remove_rotation, style.text or "")
-          
-          
+
+                  style.text = re.sub(
+                      r"(\.rank-circle\s*\{)([^}]*)(\})",
+                      remove_rotation,
+                      style.text or "",
+                  )
+
+
           def prepare_card(source, prefix, kind):
               root = ET.fromstring(source)
+
               if root.tag != tag("svg"):
                   raise ValueError("Expected an SVG document.")
-              width, height = float(root.get("width", "0")), float(root.get("height", "0"))
-              if not (200 <= width <= 1000 and 50 <= height <= 600):
-                  raise ValueError("Unexpected statistics card dimensions.")
+
+              width = float(root.get("width", "0"))
+              height = float(root.get("height", "0"))
+
+              if not (
+                  200 <= width <= 1000
+                  and 50 <= height <= 600
+              ):
+                  raise ValueError(
+                      "Unexpected statistics card dimensions."
+                  )
+
               all_text = " ".join(root.itertext())
+
               for element in root.iter():
                   local_tag = element.tag.rsplit("}", 1)[-1]
-                  if local_tag in {"script", "foreignObject", "image"}:
-                      raise ValueError("Unexpected active or external SVG content.")
+
+                  if local_tag in {
+                      "script",
+                      "foreignObject",
+                      "image",
+                  }:
+                      raise ValueError(
+                          "Unexpected active or external SVG content."
+                      )
+
                   for attribute, value in element.attrib.items():
                       local_attribute = attribute.rsplit("}", 1)[-1]
+
                       if local_attribute.lower().startswith("on"):
-                          raise ValueError("Unexpected SVG event handler.")
-                      if local_attribute == "href" and not value.startswith("#"):
-                          raise ValueError("External SVG references are not supported.")
+                          raise ValueError(
+                              "Unexpected SVG event handler."
+                          )
+
+                      if (
+                          local_attribute == "href"
+                          and not value.startswith("#")
+                      ):
+                          raise ValueError(
+                              "External SVG references are not supported."
+                          )
+
               if kind == "stats":
-                  actual = {element.get("data-testid") for element in root.iter()
-                            if element.tag == tag("text") and "".join(element.itertext()).strip()}
-                  if not {"stars", "commits", "prs", "issues", "contribs"}.issubset(actual):
-                      raise ValueError("Statistics are unavailable; previous valid image will be retained.")
+                  actual = {
+                      element.get("data-testid")
+                      for element in root.iter()
+                      if element.tag == tag("text")
+                      and "".join(element.itertext()).strip()
+                  }
+
+                  required = {
+                      "stars",
+                      "commits",
+                      "prs",
+                      "issues",
+                      "contribs",
+                  }
+
+                  if not required.issubset(actual):
+                      raise ValueError(
+                          "Statistics are unavailable; previous valid image will be retained."
+                      )
+
                   freeze_rank(root)
+
               else:
-                  has_languages = any("lang-name" in element.get("class", "").split()
-                                      and "".join(element.itertext()).strip() for element in root.iter())
-                  empty = "Sem dados de linguagens." in all_text or "No languages data." in all_text
+                  has_languages = any(
+                      "lang-name"
+                      in element.get("class", "").split()
+                      and "".join(element.itertext()).strip()
+                      for element in root.iter()
+                  )
+
+                  empty = (
+                      "Sem dados de linguagens." in all_text
+                      or "No languages data." in all_text
+                  )
+
                   if not (has_languages or empty):
-                      raise ValueError("Languages are unavailable; previous valid image will be retained.")
-          
-              ids = {element.get("id"): prefix + element.get("id")
-                     for element in root.iter() if element.get("id")}
+                      raise ValueError(
+                          "Languages are unavailable; previous valid image will be retained."
+                      )
+
+              ids = {
+                  element.get("id"): prefix + element.get("id")
+                  for element in root.iter()
+                  if element.get("id")
+              }
+
               for element in root.iter():
                   for attribute, value in list(element.attrib.items()):
                       local_attribute = attribute.rsplit("}", 1)[-1]
+
                       if local_attribute == "id":
                           value = ids[value]
+
                       elif local_attribute == "class":
-                          value = " ".join(prefix + item for item in value.split())
-                      elif local_attribute in {"aria-labelledby", "aria-describedby"}:
-                          value = " ".join(ids.get(item, item) for item in value.split())
+                          value = " ".join(
+                              prefix + item
+                              for item in value.split()
+                          )
+
+                      elif local_attribute in {
+                          "aria-labelledby",
+                          "aria-describedby",
+                      }:
+                          value = " ".join(
+                              ids.get(item, item)
+                              for item in value.split()
+                          )
+
                       for previous, current in ids.items():
-                          value = value.replace("url(#" + previous + ")", "url(#" + current + ")")
-                          if local_attribute == "href" and value == "#" + previous:
+                          value = value.replace(
+                              "url(#" + previous + ")",
+                              "url(#" + current + ")",
+                          )
+
+                          if (
+                              local_attribute == "href"
+                              and value == "#" + previous
+                          ):
                               value = "#" + current
+
                       element.set(attribute, value)
-          
+
                   if element.tag == tag("style") and element.text:
                       css = element.text
+
                       for previous, current in ids.items():
-                          css = re.sub(r"#" + re.escape(previous) + r"(?![\w-])", "#" + current, css)
-                      css = re.sub(r"\.([A-Za-z_][\w-]*)", lambda match: "." + prefix + match[1], css)
-                      names = set(re.findall(r"@keyframes\s+([\w-]+)", css))
+                          css = re.sub(
+                              r"#"
+                              + re.escape(previous)
+                              + r"(?![\w-])",
+                              "#" + current,
+                              css,
+                          )
+
+                      css = re.sub(
+                          r"\.([A-Za-z_][\w-]*)",
+                          lambda match: "."
+                          + prefix
+                          + match[1],
+                          css,
+                      )
+
+                      names = set(
+                          re.findall(
+                              r"@keyframes\s+([\w-]+)",
+                              css,
+                          )
+                      )
+
                       for name in names:
-                          css = re.sub(r"\b" + re.escape(name) + r"\b", prefix + name, css)
-                      css = css.replace("* {", "#" + prefix + "root * {")
-                      css += "\n." + prefix + "stagger { opacity: 1 !important; }\n"
-                      css += "#" + prefix + "root * { animation: none !important; }\n"
+                          css = re.sub(
+                              r"\b"
+                              + re.escape(name)
+                              + r"\b",
+                              prefix + name,
+                              css,
+                          )
+
+                      css = css.replace(
+                          "* {",
+                          "#" + prefix + "root * {",
+                      )
+
+                      css += (
+                          "\n."
+                          + prefix
+                          + "stagger { opacity: 1 !important; }\n"
+                      )
+
+                      css += (
+                          "#"
+                          + prefix
+                          + "root * { animation: none !important; }\n"
+                      )
+
                       element.text = css
+
               root.set("id", prefix + "root")
+
               return root, width, height
-          
-          
+
+
           def build_panel(stats_source, languages_source):
-              stats, stats_width, stats_height = prepare_card(stats_source, "stats_", "stats")
-              languages, languages_width, languages_height = prepare_card(languages_source, "langs_", "languages")
+              stats, stats_width, stats_height = prepare_card(
+                  stats_source,
+                  "stats_",
+                  "stats",
+              )
+
+              languages, languages_width, languages_height = prepare_card(
+                  languages_source,
+                  "langs_",
+                  "languages",
+              )
+
               width = stats_width + languages_width
-              content_height = max(stats_height, languages_height)
+              content_height = max(
+                  stats_height,
+                  languages_height,
+              )
+
               height = content_height + 29
-              root = ET.Element(tag("svg"), {"width": str(int(width)), "height": str(int(height)),
-                  "viewBox": f"0 0 {width:g} {height:g}", "role": "img", "aria-labelledby": "panel-title"})
-              ET.SubElement(root, tag("title"), {"id": "panel-title"}).text = "Estatísticas e linguagens públicas de Samuel Krull"
+
+              root = ET.Element(
+                  tag("svg"),
+                  {
+                      "width": str(int(width)),
+                      "height": str(int(height)),
+                      "viewBox": f"0 0 {width:g} {height:g}",
+                      "role": "img",
+                      "aria-labelledby": "panel-title",
+                  },
+              )
+
+              ET.SubElement(
+                  root,
+                  tag("title"),
+                  {"id": "panel-title"},
+              ).text = (
+                  "Estatísticas e linguagens públicas de Samuel Krull"
+              )
+
               defs = ET.SubElement(root, tag("defs"))
-              clip = ET.SubElement(defs, tag("clipPath"), {"id": "panel-clip"})
-              ET.SubElement(clip, tag("rect"), {"x": "0.5", "y": "0.5", "width": str(width - 1),
-                  "height": str(height - 1), "rx": "10"})
-              ET.SubElement(root, tag("rect"), {"x": "0.5", "y": "0.5", "width": str(width - 1),
-                  "height": str(height - 1), "rx": "10", "fill": "#0D1117"})
-              content = ET.SubElement(root, tag("g"), {"clip-path": "url(#panel-clip)"})
-              stats.set("x", "0"); stats.set("y", "0")
-              languages.set("x", f"{stats_width:g}"); languages.set("y", "0")
+
+              clip = ET.SubElement(
+                  defs,
+                  tag("clipPath"),
+                  {"id": "panel-clip"},
+              )
+
+              ET.SubElement(
+                  clip,
+                  tag("rect"),
+                  {
+                      "x": "0.5",
+                      "y": "0.5",
+                      "width": str(width - 1),
+                      "height": str(height - 1),
+                      "rx": "10",
+                  },
+              )
+
+              ET.SubElement(
+                  root,
+                  tag("rect"),
+                  {
+                      "x": "0.5",
+                      "y": "0.5",
+                      "width": str(width - 1),
+                      "height": str(height - 1),
+                      "rx": "10",
+                      "fill": "#0D1117",
+                  },
+              )
+
+              content = ET.SubElement(
+                  root,
+                  tag("g"),
+                  {"clip-path": "url(#panel-clip)"},
+              )
+
+              stats.set("x", "0")
+              stats.set("y", "0")
+
+              languages.set(
+                  "x",
+                  f"{stats_width:g}",
+              )
+              languages.set("y", "0")
+
               content.extend([stats, languages])
-              ET.SubElement(root, tag("line"), {"x1": f"{stats_width:g}", "x2": f"{stats_width:g}",
-                  "y1": "18", "y2": f"{content_height - 14:g}", "stroke": "#263342"})
-              date = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=3)).strftime("%d/%m/%Y")
-              ET.SubElement(root, tag("text"), {"x": "25", "y": f"{height - 12:g}", "fill": "#8B949E",
-                  "font-size": "11", "font-family": "Segoe UI, Arial, sans-serif"}).text = "Dados públicos · Consulta em " + date
-              ET.SubElement(root, tag("rect"), {"x": "0.5", "y": "0.5", "width": str(width - 1),
-                  "height": str(height - 1), "rx": "10", "fill": "none", "stroke": "#30363D"})
-              return ET.tostring(root, encoding="unicode")
-          
-          
-                   HEADER = '''<svg xmlns="http://www.w3.org/2000/svg" width="990" height="220" viewBox="0 0 990 220" role="img" aria-labelledby="title description">
+
+              ET.SubElement(
+                  root,
+                  tag("line"),
+                  {
+                      "x1": f"{stats_width:g}",
+                      "x2": f"{stats_width:g}",
+                      "y1": "18",
+                      "y2": f"{content_height - 14:g}",
+                      "stroke": "#263342",
+                  },
+              )
+
+              date = (
+                  datetime.datetime.now(datetime.timezone.utc)
+                  - datetime.timedelta(hours=3)
+              ).strftime("%d/%m/%Y")
+
+              ET.SubElement(
+                  root,
+                  tag("text"),
+                  {
+                      "x": "25",
+                      "y": f"{height - 12:g}",
+                      "fill": "#8B949E",
+                      "font-size": "11",
+                      "font-family": "Segoe UI, Arial, sans-serif",
+                  },
+              ).text = (
+                  "Dados públicos · Consulta em " + date
+              )
+
+              ET.SubElement(
+                  root,
+                  tag("rect"),
+                  {
+                      "x": "0.5",
+                      "y": "0.5",
+                      "width": str(width - 1),
+                      "height": str(height - 1),
+                      "rx": "10",
+                      "fill": "none",
+                      "stroke": "#30363D",
+                  },
+              )
+
+              return ET.tostring(
+                  root,
+                  encoding="unicode",
+              )
+
+
+          HEADER = '''<svg xmlns="http://www.w3.org/2000/svg" width="990" height="220" viewBox="0 0 990 220" role="img" aria-labelledby="title description">
             <title id="title">Samuel Krull</title>
             <desc id="description">Samuel Krull — Python, Java, automação, inteligência artificial e APIs.</desc>
 
@@ -211,7 +548,6 @@ jobs:
               </linearGradient>
             </defs>
 
-            <!-- Background -->
             <rect
               x="0.5"
               y="0.5"
@@ -222,7 +558,6 @@ jobs:
               stroke="#30363D"
             />
 
-            <!-- Small top label -->
             <text
               x="55"
               y="48"
@@ -233,7 +568,6 @@ jobs:
               letter-spacing="2"
             >SOFTWARE · AUTOMATION · AI</text>
 
-            <!-- Name -->
             <text
               x="53"
               y="105"
@@ -243,7 +577,6 @@ jobs:
               font-weight="700"
             >Samuel Krull</text>
 
-            <!-- Accent -->
             <rect
               x="55"
               y="121"
@@ -253,7 +586,6 @@ jobs:
               fill="url(#accent)"
             />
 
-            <!-- Technologies -->
             <text
               x="55"
               y="158"
@@ -262,7 +594,6 @@ jobs:
               font-size="17"
             >Python · Java · Automation · AI · APIs</text>
 
-            <!-- Bottom message -->
             <text
               x="55"
               y="188"
@@ -271,7 +602,6 @@ jobs:
               font-size="13"
             >Building solutions. Learning by doing.</text>
 
-            <!-- Code symbol -->
             <g
               fill="none"
               stroke="#58A6FF"
@@ -285,54 +615,179 @@ jobs:
               <path d="M846 68 L817 151"/>
             </g>
 
-            <!-- Decorative dots -->
-            <circle cx="939" cy="31" r="3" fill="#58A6FF" opacity="0.55"/>
-            <circle cx="953" cy="31" r="3" fill="#58A6FF" opacity="0.30"/>
-            <circle cx="925" cy="31" r="3" fill="#58A6FF" opacity="0.80"/>
+            <circle
+              cx="925"
+              cy="31"
+              r="3"
+              fill="#58A6FF"
+              opacity="0.80"
+            />
 
+            <circle
+              cx="939"
+              cy="31"
+              r="3"
+              fill="#58A6FF"
+              opacity="0.55"
+            />
+
+            <circle
+              cx="953"
+              cy="31"
+              r="3"
+              fill="#58A6FF"
+              opacity="0.30"
+            />
           </svg>'''
-          
-          
+
+
           def main():
               parser = argparse.ArgumentParser()
-              parser.add_argument("--sources", type=pathlib.Path)
-              parser.add_argument("--output", type=pathlib.Path, default=pathlib.Path("dist"))
+
+              parser.add_argument(
+                  "--sources",
+                  type=pathlib.Path,
+              )
+
+              parser.add_argument(
+                  "--output",
+                  type=pathlib.Path,
+                  default=pathlib.Path("dist"),
+              )
+
               args = parser.parse_args()
-              args.output.mkdir(parents=True, exist_ok=True)
-              (args.output / "profile-header.svg").write_text(HEADER, encoding="utf-8")
+
+              args.output.mkdir(
+                  parents=True,
+                  exist_ok=True,
+              )
+
+              (
+                  args.output / "profile-header.svg"
+              ).write_text(
+                  HEADER,
+                  encoding="utf-8",
+              )
+
               try:
                   if args.sources:
-                      sources = [(args.sources / name).read_bytes() for name in ["stats-source.svg", "languages-source.svg"]]
+                      sources = [
+                          (
+                              args.sources / name
+                          ).read_bytes()
+                          for name in [
+                              "stats-source.svg",
+                              "languages-source.svg",
+                          ]
+                      ]
                   else:
-                      sources = [read_source(url) for url in source_urls()]
+                      sources = [
+                          read_source(url)
+                          for url in source_urls()
+                      ]
+
                   panel = build_panel(*sources)
+
               except Exception as error:
                   if args.sources:
                       raise
-                  print("::warning::Public statistics could not be refreshed: " + str(error))
-                  previous_url = "https://api.github.com/repos/samkrull/samkrull/contents/github-panel.svg?ref=output"
+
+                  print(
+                      "::warning::Public statistics could not be refreshed: "
+                      + str(error)
+                  )
+
+                  previous_url = (
+                      "https://api.github.com/repos/"
+                      "samkrull/samkrull/contents/"
+                      "github-panel.svg?ref=output"
+                  )
+
                   try:
-                      headers = {"User-Agent": "samkrull-profile/1.0", "Accept": "application/vnd.github+json"}
+                      headers = {
+                          "User-Agent": "samkrull-profile/1.0",
+                          "Accept": "application/vnd.github+json",
+                      }
+
                       if os.environ.get("GITHUB_TOKEN"):
-                          headers["Authorization"] = "Bearer " + os.environ["GITHUB_TOKEN"]
-                      request = urllib.request.Request(previous_url, headers=headers)
-                      with urllib.request.urlopen(request, timeout=15) as response:
+                          headers["Authorization"] = (
+                              "Bearer "
+                              + os.environ["GITHUB_TOKEN"]
+                          )
+
+                      request = urllib.request.Request(
+                          previous_url,
+                          headers=headers,
+                      )
+
+                      with urllib.request.urlopen(
+                          request,
+                          timeout=15,
+                      ) as response:
                           metadata = json.load(response)
-                      if metadata.get("encoding") != "base64" or metadata.get("size", 1_000_001) > 1_000_000:
-                          raise ValueError("Unexpected previous panel metadata.")
-                      previous = base64.b64decode(metadata["content"])
-                      previous_root = ET.fromstring(previous)
-                      if len(previous) > 1_000_000 or previous_root.tag != tag("svg"):
-                          raise ValueError("Unexpected previous panel.")
-                      has_statistics = any(element.get("data-testid") == "stars" for element in previous_root.iter())
-                      placeholder = "Estatísticas temporariamente indisponíveis" in "".join(previous_root.itertext())
-                      if not (has_statistics or placeholder):
-                          raise ValueError("No previous valid statistics panel.")
+
+                      if (
+                          metadata.get("encoding") != "base64"
+                          or metadata.get(
+                              "size",
+                              1_000_001,
+                          )
+                          > 1_000_000
+                      ):
+                          raise ValueError(
+                              "Unexpected previous panel metadata."
+                          )
+
+                      previous = base64.b64decode(
+                          metadata["content"]
+                      )
+
+                      previous_root = ET.fromstring(
+                          previous
+                      )
+
+                      if (
+                          len(previous) > 1_000_000
+                          or previous_root.tag != tag("svg")
+                      ):
+                          raise ValueError(
+                              "Unexpected previous panel."
+                          )
+
+                      has_statistics = any(
+                          element.get("data-testid")
+                          == "stars"
+                          for element
+                          in previous_root.iter()
+                      )
+
+                      placeholder = (
+                          "Estatísticas temporariamente indisponíveis"
+                          in "".join(
+                              previous_root.itertext()
+                          )
+                      )
+
+                      if not (
+                          has_statistics
+                          or placeholder
+                      ):
+                          raise ValueError(
+                              "No previous valid statistics panel."
+                          )
+
                       panel = previous.decode("utf-8")
-                      print("Retained previous panel and its original consultation date.")
+
+                      print(
+                          "Retained previous panel and its original consultation date."
+                      )
+
                   except urllib.error.HTTPError as previous_error:
                       if previous_error.code != 404:
-                          raise RuntimeError("The previous panel could not be checked; nothing will be published.") from previous_error
+                          raise RuntimeError(
+                              "The previous panel could not be checked; nothing will be published."
+                          ) from previous_error
+
                       panel = '''<svg xmlns="http://www.w3.org/2000/svg" width="990" height="224" viewBox="0 0 990 224" role="img" aria-labelledby="title">
                         <title id="title">Estatísticas temporariamente indisponíveis</title>
                         <rect x=".5" y=".5" width="989" height="223" rx="10" fill="#0D1117" stroke="#30363D"/>
@@ -340,18 +795,30 @@ jobs:
                         <text x="25" y="90" fill="#C9D1D9" font-family="Segoe UI, Arial, sans-serif" font-size="16">Dados temporariamente indisponíveis.</text>
                         <text x="25" y="122" fill="#8B949E" font-family="Segoe UI, Arial, sans-serif" font-size="14">A próxima atualização tentará consultar as estatísticas novamente.</text>
                       </svg>'''
+
                   except Exception as previous_error:
-                      raise RuntimeError("The previous panel could not be checked; nothing will be published.") from previous_error
-              (args.output / "github-panel.svg").write_text(panel, encoding="utf-8")
-              print("Created header and unified panel.")
-          
-          
+                      raise RuntimeError(
+                          "The previous panel could not be checked; nothing will be published."
+                      ) from previous_error
+
+              (
+                  args.output / "github-panel.svg"
+              ).write_text(
+                  panel,
+                  encoding="utf-8",
+              )
+
+              print(
+                  "Created header and unified panel."
+              )
+
+
           if __name__ == "__main__":
               main()
           PY
 
       - name: Create light and dark contribution animations
-        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3
+        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b
         with:
           github_user_name: samkrull
           github_token: ${{ github.token }}
@@ -367,7 +834,7 @@ jobs:
           test -s dist/github-contribution-grid-snake-dark.svg
 
       - name: Save profile images on the output branch
-        uses: crazy-max/ghaction-github-pages@1d6ee9b181a81033a16bd707a1401afa978daab4 # v5
+        uses: crazy-max/ghaction-github-pages@1d6ee9b181a81033a16bd707a1401afa978daab4
         with:
           target_branch: output
           build_dir: dist
