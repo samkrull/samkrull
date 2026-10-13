@@ -4,11 +4,15 @@
 
 ---
 
-## Sobre mim
+## 👋 Sobre mim
 
-Sou estudante técnico e tenho interesse em programação, automação e inteligência artificial aplicada.
+Tenho 18 anos, estou concluindo o **Ensino Médio ** e atualmente trabalho como **Jovem Aprendiz Administrativo na Prefeitura do Rio de Janeiro**.
 
-Estou desenvolvendo minha prática com Python e JavaScript, participando de projetos e hackathons.
+Tenho desenvolvido projetos principalmente com **Python e auxílio de IA**, além de estudar **Java, APIs, análise de dados, automação e desenvolvimento de software**. Também utilizo ferramentas de IA no meu processo de desenvolvimento para pesquisar, estruturar soluções, programar e aprender novas tecnologias.
+
+Busco colocar esse aprendizado em prática através de **projetos pessoais, bootcamps, hackathons e projetos em equipe**. Recentemente, também tive contato com conceitos de **blockchain, hashing e rastreabilidade de dados** durante o desenvolvimento de um projeto para hackathon.
+
+Estou no início da minha trajetória na área de tecnologia e meu objetivo é continuar evoluindo, entender cada vez melhor as soluções que desenvolvo e construir projetos que resolvam **problemas reais**.
 
 ## Tecnologias e interesses
 
