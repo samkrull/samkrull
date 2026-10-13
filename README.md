@@ -6,7 +6,7 @@
 
 ## 👋 Sobre mim
 
-Tenho 18 anos, estou concluindo o **Ensino Médio ** e atualmente trabalho como **Jovem Aprendiz Administrativo na Prefeitura do Rio de Janeiro**.
+Tenho 18 anos, estou concluindo o **Ensino Médio** e atualmente trabalho como **Jovem Aprendiz Administrativo na Prefeitura do Rio de Janeiro**.
 
 Tenho desenvolvido projetos principalmente com **Python e auxílio de IA**, além de estudar **Java, APIs, análise de dados, automação e desenvolvimento de software**. Também utilizo ferramentas de IA no meu processo de desenvolvimento para pesquisar, estruturar soluções, programar e aprender novas tecnologias.
 
