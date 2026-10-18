@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="990" height="224" viewBox="0 0 990 224" role="img" aria-labelledby="panel-title"><title id="panel-title">Estatísticas e linguagens públicas de Samuel Krull</title><defs><clipPath id="panel-clip"><rect x="0.5" y="0.5" width="989.0" height="223.0" rx="10" /></clipPath></defs><rect x="0.5" y="0.5" width="989.0" height="223.0" rx="10" fill="#0D1117" /><g clip-path="url(#panel-clip)"><svg width="495" height="195" viewBox="0 0 495 195" fill="none" role="img" aria-labelledby="stats_descId" id="stats_root" x="0" y="0">
         <title id="stats_titleId">GitHub em números, Rank: C</title>
-        <desc id="stats_descId">Total de estrelas: 0, Total de Commits  (Ano passado) : 11, Total de PRs: 2, Total de Issues: 0, Contribuiu para (ano passado): 1</desc>
+        <desc id="stats_descId">Total de estrelas: 1, Total de Commits  (Ano passado) : 11, Total de PRs: 2, Total de Issues: 0, Contribuiu para (ano passado): 1</desc>
         <style>
           .stats_header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -64,7 +64,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 248.3510394034413;
+        stroke-dashoffset: 246.70837657803486;
       }
     }
   
@@ -117,7 +117,7 @@
           
     <g data-testid="rank-circle" transform="translate(418.5, 47.5)">
         <circle class="stats_rank-circle-rim" cx="-10" cy="8" r="40" />
-        <circle class="stats_rank-circle" cx="-10" cy="8" r="40" stroke-dashoffset="248.3510394034413" transform="rotate(-90 -10 8)" />
+        <circle class="stats_rank-circle" cx="-10" cy="8" r="40" stroke-dashoffset="246.70837657803486" transform="rotate(-90 -10 8)" />
         <g class="stats_rank-text" transform="translate(-5 5)">
           
         <text x="-5" y="3" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="level-rank-icon">
@@ -135,7 +135,7 @@
     </svg>
   
       <text class="stats_stat stats_bold" x="25" y="12.5">Total de estrelas:</text>
-      <text class="stats_stat stats_bold" x="274.01" y="12.5" data-testid="stars">0</text>
+      <text class="stats_stat stats_bold" x="274.01" y="12.5" data-testid="stars">1</text>
     </g>
   </g><g transform="translate(0, 25)">
     <g class="stats_stagger" style="animation-delay: 600ms" transform="translate(25, 0)">
@@ -288,4 +288,4 @@
     </svg>
   
         </g>
-      </svg></g><line x1="495" x2="495" y1="18" y2="181" stroke="#263342" /><text x="25" y="212" fill="#8B949E" font-size="11" font-family="Segoe UI, Arial, sans-serif">Dados públicos · Consulta em 17/10/2026</text><rect x="0.5" y="0.5" width="989.0" height="223.0" rx="10" fill="none" stroke="#30363D" /></svg>
+      </svg></g><line x1="495" x2="495" y1="18" y2="181" stroke="#263342" /><text x="25" y="212" fill="#8B949E" font-size="11" font-family="Segoe UI, Arial, sans-serif">Dados públicos · Consulta em 18/10/2026</text><rect x="0.5" y="0.5" width="989.0" height="223.0" rx="10" fill="none" stroke="#30363D" /></svg>
